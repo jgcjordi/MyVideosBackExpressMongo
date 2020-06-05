@@ -418,9 +418,13 @@ app.get('/myvideos/users/:userId/playlists/:playlistId/videos', function(req,
     else {
         var videos = [];
         for (var id in db[userId].playlists[playlistId].videos) {
-            if (db[userId].playlists[playlistId].videos[id].type === 'local')
-                videos.push(db[userId].videos[id]);
-            else videos.push(db[userId].playlists[playlistId].videos[id]);
+            if (db[userId].playlists[playlistId].videos[id].type === 'local') {
+                if (db[userId].videos[id] != null) {
+                    videos.push(db[userId].videos[id]);
+                } else {
+                    delete db[userId].playlists[playlistId].videos[id];
+                }
+            } else videos.push(db[userId].playlists[playlistId].videos[id]);
         }
         res.send(videos);
     }
@@ -445,3 +449,5 @@ app.delete('/myvideos/users/:userId/playlists/:playlistId/videos/:videoId',
             res.send(204);
         }
     });
+
+//updateOrderVideosOfPlaylistOfUser
