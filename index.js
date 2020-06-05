@@ -177,7 +177,14 @@ app.get('/myvideos/users/:userId/videos', function(req, res) {
     else {
         var videos = [];
         for (var id in db[userId].videos) videos.push(db[userId].videos[id]);
-        res.send(videos);
+        if (req.query.q) {
+            let _videos = videos.filter((video) => {
+                return video.title.indexOf(req.query.q) !== -1;
+            })
+            res.send(_videos)
+        } else {
+            res.send(videos);
+        }
     }
 });
 
